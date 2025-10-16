@@ -1,0 +1,2739 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subscription Management System</title>
+    <style>
+        body {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: #2d3748;
+            line-height: 1.6;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        /* Header Design */
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1.5rem 2rem;
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-icon {
+            width: 3rem;
+            height: 3rem;
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: bold;
+            backdrop-filter: blur(10px);
+        }
+
+        .logo-text {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .header-info {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .date-display {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            font-size: 0.95rem;
+            border-radius: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            font-weight: 500;
+        }
+
+        .stats-mini {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .stat-mini {
+            text-align: center;
+            padding: 0.75rem 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            min-width: 4.5rem;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .stat-mini:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .stat-mini-number {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: white;
+        }
+
+        .stat-mini-label {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 500;
+        }
+
+        /* Navigation Tabs */
+        .nav-tabs {
+            display: flex;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 0.5rem;
+            gap: 0.5rem;
+            overflow-x: auto;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-tab {
+            flex: 1;
+            min-width: 140px;
+            padding: 1rem 1.5rem;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            font-size: 0.95rem;
+            color: rgba(255, 255, 255, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            white-space: nowrap;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .nav-tab:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            transform: translateY(-1px);
+        }
+
+        .nav-tab.active {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2.5rem 2rem;
+            min-height: calc(100vh - 200px);
+        }
+
+        /* Tab Content */
+        .tab-content {
+            display: none;
+            animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* Card Styles */
+        .card {
+            background: rgba(255, 255, 255, 0.98);
+            padding: 2.5rem;
+            margin-bottom: 2.5rem;
+            border-radius: 24px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.12);
+        }
+
+        .card-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+            border-bottom: 2px solid rgba(226, 232, 240, 0.6);
+            padding-bottom: 2rem;
+        }
+
+        .card-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            letter-spacing: -0.025em;
+        }
+
+        .card-subtitle {
+            color: #6b7280;
+            font-size: 1.1rem;
+            font-weight: 500;
+            line-height: 1.6;
+        }
+
+        /* Form Styles */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.75rem;
+            position: relative;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+            color: #374151;
+            font-size: 0.95rem;
+            letter-spacing: 0.025em;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 1.25rem 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 16px;
+            font-size: 1rem;
+            background: rgba(255, 255, 255, 0.95);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            font-family: inherit;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1), 0 4px 12px rgba(0, 0, 0, 0.15);
+            background: rgba(255, 255, 255, 1);
+            transform: translateY(-2px);
+        }
+
+        .form-input:hover {
+            border-color: #9ca3af;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        textarea.form-input {
+            resize: vertical;
+            min-height: 120px;
+            line-height: 1.6;
+        }
+
+        .form-input::placeholder {
+            color: #9ca3af;
+            font-weight: 400;
+        }
+
+        /* Button Styles */
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 16px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+            font-family: inherit;
+            letter-spacing: 0.025em;
+            min-height: 48px;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn:active {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: linear-gradient(135deg, #38a169 0%, #2f855a 100%);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #718096 0%, #4a5568 100%);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+        }
+
+        .btn-small {
+            padding: 0.75rem 1.5rem;
+            font-size: 0.875rem;
+            min-height: 40px;
+        }
+
+        /* Table Styles */
+        .table-container {
+            background: rgba(255, 255, 255, 0.95);
+            overflow: hidden;
+            margin-bottom: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 600px;
+        }
+
+        th {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            padding: 1rem 0.75rem;
+            text-align: left;
+            font-weight: 600;
+            color: white;
+            font-size: 0.875rem;
+            border: none;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 0.875rem 0.75rem;
+            border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+            font-size: 0.875rem;
+            color: #4a5568;
+            vertical-align: top;
+        }
+
+        tr:hover {
+            background: rgba(102, 126, 234, 0.05);
+            transition: all 0.2s ease;
+        }
+
+        tr:nth-child(even) {
+            background: rgba(247, 250, 252, 0.5);
+        }
+
+        /* Mobile Card Layout */
+        .mobile-cards {
+            display: none;
+        }
+
+        .mobile-card {
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .mobile-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+        }
+
+        .mobile-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid rgba(226, 232, 240, 0.6);
+        }
+
+        .mobile-card-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin: 0;
+        }
+
+        .mobile-card-status {
+            flex-shrink: 0;
+        }
+
+        .mobile-card-body {
+            display: grid;
+            gap: 0.75rem;
+        }
+
+        .mobile-card-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+        }
+
+        .mobile-card-label {
+            font-weight: 600;
+            color: #6b7280;
+            font-size: 0.875rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .mobile-card-value {
+            color: #374151;
+            font-weight: 500;
+            text-align: right;
+            word-break: break-word;
+            max-width: 60%;
+        }
+
+        .mobile-card-actions {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(226, 232, 240, 0.6);
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .mobile-empty-state {
+            display: none;
+            text-align: center;
+            padding: 3rem 1rem;
+            color: #64748b;
+        }
+
+        .mobile-empty-state .empty-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .mobile-empty-state p {
+            font-size: 1.1rem;
+            margin: 0;
+        }
+
+        /* Status badges */
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-active {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-expiring {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-expired {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        /* Search Input */
+        .search-container {
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 1rem 1rem 1rem 3rem;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 25px;
+            font-size: 1rem;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            background: rgba(255, 255, 255, 1);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1.25rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #667eea;
+            font-size: 1.3rem;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Notifications */
+        .notification {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            padding: 1rem 1.5rem;
+            border-radius: 4px;
+            color: white;
+            font-weight: 600;
+            z-index: 3000;
+            transform: translateX(400px);
+            transition: all 0.3s ease;
+            max-width: 350px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            background: #27ae60;
+        }
+
+        .notification.error {
+            background: #e74c3c;
+        }
+
+        /* Utility Classes */
+        .hidden { display: none !important; }
+        .text-center { text-align: center; }
+        .flex { display: flex; }
+        .items-center { align-items: center; }
+        .justify-center { justify-content: center; }
+        .justify-between { justify-content: space-between; }
+        .gap-2 { gap: 0.5rem; }
+        .gap-4 { gap: 1rem; }
+        .mb-4 { margin-bottom: 1rem; }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            /* Hide table and show cards on mobile */
+            .table-container .table-wrapper {
+                display: none;
+            }
+            
+            .mobile-cards {
+                display: block;
+            }
+            
+            .mobile-empty-state {
+                display: block;
+            }
+            
+            .table-container .mobile-empty-state.hidden {
+                display: none;
+            }
+            .header-container {
+                padding: 0.75rem 1rem;
+            }
+
+            .header-top {
+                flex-direction: column;
+                gap: 1rem;
+                margin-bottom: 1rem;
+            }
+
+            .header-info {
+                flex-direction: column;
+                gap: 1rem;
+                width: 100%;
+            }
+
+            .stats-mini {
+                justify-content: center;
+                width: 100%;
+                flex-wrap: wrap;
+            }
+
+            .stat-mini {
+                min-width: 70px;
+                padding: 0.5rem 0.75rem;
+            }
+
+            .stat-mini-number {
+                font-size: 1.1rem;
+            }
+
+            .stat-mini-label {
+                font-size: 0.7rem;
+            }
+
+            .logo-text {
+                font-size: 1.3rem;
+            }
+
+            .nav-tabs {
+                padding: 0.25rem;
+                gap: 0.25rem;
+                overflow-x: auto;
+                scrollbar-width: none;
+                -ms-overflow-style: none;
+            }
+
+            .nav-tabs::-webkit-scrollbar {
+                display: none;
+            }
+
+            .nav-tab {
+                min-width: 90px;
+                padding: 0.75rem 0.5rem;
+                font-size: 0.8rem;
+                gap: 0.4rem;
+                flex-shrink: 0;
+            }
+
+            .main-content {
+                padding: 1rem 0.75rem;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .card {
+                padding: 1.25rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .card-title {
+                font-size: 1.4rem;
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .card-subtitle {
+                font-size: 1rem;
+            }
+
+            .notification {
+                right: 0.75rem;
+                left: 0.75rem;
+                top: 1rem;
+                max-width: none;
+            }
+
+            .table-container {
+                margin: 0 -0.75rem;
+                border-radius: 0;
+            }
+
+            .table-wrapper {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            th, td {
+                padding: 0.75rem 0.5rem;
+                font-size: 0.8rem;
+                white-space: nowrap;
+            }
+
+            th {
+                font-size: 0.75rem;
+            }
+
+            .btn {
+                padding: 0.875rem 1.5rem;
+                font-size: 0.9rem;
+            }
+
+            .btn-small {
+                padding: 0.625rem 1rem;
+                font-size: 0.8rem;
+            }
+
+            .search-input {
+                padding: 0.875rem 1rem 0.875rem 2.5rem;
+            }
+
+            .search-icon {
+                left: 1rem;
+                font-size: 1.1rem;
+            }
+
+            .form-input {
+                padding: 1rem 0.875rem;
+            }
+
+            .modal-content {
+                margin: 1rem;
+                padding: 1.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header-container {
+                padding: 0.5rem 0.75rem;
+            }
+
+            .logo-icon {
+                width: 2.25rem;
+                height: 2.25rem;
+                font-size: 0.9rem;
+            }
+
+            .logo-text {
+                font-size: 1.1rem;
+            }
+
+            .nav-tab {
+                min-width: 75px;
+                padding: 0.625rem 0.375rem;
+                font-size: 0.75rem;
+            }
+
+            .main-content {
+                padding: 0.75rem 0.5rem;
+            }
+
+            .card {
+                padding: 1rem;
+                border-radius: 16px;
+            }
+
+            .card-title {
+                font-size: 1.25rem;
+            }
+
+            .form-input, .search-input {
+                font-size: 16px; /* Prevents zoom on iOS */
+                padding: 0.875rem 0.75rem;
+            }
+
+            .search-input {
+                padding-left: 2.25rem;
+            }
+
+            .btn {
+                padding: 0.75rem 1.25rem;
+                font-size: 0.85rem;
+                min-height: 44px;
+            }
+
+            .btn-small {
+                padding: 0.5rem 0.875rem;
+                font-size: 0.75rem;
+                min-height: 36px;
+            }
+
+            th, td {
+                padding: 0.625rem 0.375rem;
+                font-size: 0.75rem;
+            }
+
+            .stat-mini {
+                min-width: 60px;
+                padding: 0.375rem 0.5rem;
+            }
+
+            .stat-mini-number {
+                font-size: 1rem;
+            }
+
+            .stat-mini-label {
+                font-size: 0.65rem;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .nav-tab {
+                min-width: 65px;
+                padding: 0.5rem 0.25rem;
+                font-size: 0.7rem;
+            }
+
+            .nav-tab span:first-child {
+                font-size: 0.9rem;
+            }
+
+            .card-title {
+                font-size: 1.1rem;
+            }
+
+            .form-grid {
+                gap: 1.25rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-container">
+            <!-- Top Section -->
+            <div class="header-top">
+                <div class="logo-section">
+                    <div class="logo-icon">S</div>
+                    <h1 class="logo-text">Subscription Manager</h1>
+                </div>
+                
+                <div class="header-info">
+                    <div class="date-display">
+                        <span id="currentDate"></span>
+                    </div>
+                    
+                    <div class="stats-mini">
+                        <div class="stat-mini">
+                            <div class="stat-mini-number" id="miniTotal">0</div>
+                            <div class="stat-mini-label">Total</div>
+                        </div>
+                        <div class="stat-mini">
+                            <div class="stat-mini-number" id="miniActive">0</div>
+                            <div class="stat-mini-label">Active</div>
+                        </div>
+                        <div class="stat-mini">
+                            <div class="stat-mini-number" id="miniExpiring">0</div>
+                            <div class="stat-mini-label">Expiring</div>
+                        </div>
+                        <div class="stat-mini">
+                            <div class="stat-mini-number" id="miniExpired">0</div>
+                            <div class="stat-mini-label">Expired</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Navigation Tabs -->
+            <div class="nav-tabs">
+                <button onclick="showTab('dashboard')" class="nav-tab active" id="dashboard-tab">
+                    <span>📊</span>
+                    <span>Dashboard</span>
+                </button>
+                <button onclick="showTab('master')" class="nav-tab" id="master-tab">
+                    <span>👥</span>
+                    <span>Master Entry</span>
+                </button>
+                <button onclick="showTab('renewal')" class="nav-tab" id="renewal-tab">
+                    <span>🔄</span>
+                    <span>Renewal</span>
+                </button>
+                <button onclick="showTab('settings')" class="nav-tab" id="settings-tab">
+                    <span>⚙️</span>
+                    <span>Settings</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Dashboard Tab -->
+        <div id="dashboard" class="tab-content active">
+            <!-- Quick Actions -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">
+                        <span>⚡</span>
+                        <span>Quick Actions</span>
+                    </h2>
+                    <p class="card-subtitle">Frequently used actions for faster workflow</p>
+                </div>
+                
+                <div style="display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap;">
+                    <button onclick="openMasterEntry();" class="btn btn-primary" style="padding: 0.5rem 0.75rem; height: auto; flex-direction: row; gap: 0.5rem; min-width: auto; flex: 1; max-width: 200px;">
+                        <span style="font-size: 1rem;">➕</span>
+                        <span style="font-weight: 600; font-size: 0.75rem;">Add Entry</span>
+                    </button>
+                    
+                    <button onclick="showTab('renewal');" class="btn btn-success" style="padding: 0.5rem 0.75rem; height: auto; flex-direction: row; gap: 0.5rem; min-width: auto; flex: 1; max-width: 200px;">
+                        <span style="font-size: 1rem;">🔄</span>
+                        <span style="font-weight: 600; font-size: 0.75rem;">Renewal</span>
+                    </button>
+                    
+                    <button onclick="openBulkOperations();" class="btn btn-secondary" style="padding: 0.5rem 0.75rem; height: auto; flex-direction: row; gap: 0.5rem; min-width: auto; flex: 1; max-width: 200px;">
+                        <span style="font-size: 1rem;">📊</span>
+                        <span style="font-weight: 600; font-size: 0.75rem;">Bulk Ops</span>
+                    </button>
+                    
+                    <button onclick="openWarningList();" class="btn" style="padding: 0.5rem 0.75rem; height: auto; flex-direction: row; gap: 0.5rem; background: linear-gradient(135deg, #f59e0b, #d97706); color: white; min-width: auto; flex: 1; max-width: 200px;">
+                        <span style="font-size: 1rem;">⚠️</span>
+                        <span style="font-weight: 600; font-size: 0.75rem;">Warnings</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Stats Overview -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">
+                        <span>📊</span>
+                        <span>Subscription Overview</span>
+                    </h2>
+                    <p class="card-subtitle">Complete list of all subscriptions with search functionality</p>
+                </div>
+
+                <!-- Search -->
+                <div class="search-container">
+                    <div class="search-icon">🔍</div>
+                    <input type="text" id="searchInput" placeholder="Search by company name, email, or subscription ID..." 
+                           class="search-input">
+                </div>
+
+                <!-- Table -->
+                <div class="table-container">
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>🏢 Company</th>
+                                    <th>✉️ Email</th>
+                                    <th>🔖 Sub ID</th>
+                                    <th>📋 Model</th>
+                                    <th>📆 Expiry</th>
+                                    <th>📊 Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="dashboardTable">
+                                <tr>
+                                    <td colspan="6" class="text-center" style="padding: 3rem;">
+                                        <div style="color: #64748b; font-size: 1.1rem;">
+                                            <div style="font-size: 3rem; margin-bottom: 1rem;">📋</div>
+                                            <p>No subscriptions found</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <!-- Mobile Cards -->
+                    <div class="mobile-cards" id="dashboardCards">
+                        <div class="mobile-empty-state">
+                            <div class="empty-icon">📋</div>
+                            <p>No subscriptions found</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Master Entry Tab -->
+        <div id="master" class="tab-content">
+            <!-- Add Button and Export/Import -->
+            <div class="text-center mb-4" style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                <button onclick="toggleForm()" id="addBtn" class="btn btn-primary">
+                    ➕ Add New Subscription
+                </button>
+                <button onclick="exportToExcel()" class="btn btn-success">
+                    📤 Export to Excel
+                </button>
+                <label class="btn" style="cursor: pointer; background: linear-gradient(135deg, #f59e0b, #d97706); color: white;">
+                    📥 Import from Excel
+                    <input type="file" id="excelImportFile" accept=".xlsx,.xls,.csv" class="hidden" onchange="importFromExcel(event)">
+                </label>
+            </div>
+
+            <!-- Master Entry Form -->
+            <div id="masterForm" class="card hidden">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="card-title" style="margin-bottom: 0;">
+                        <span>👥</span>
+                        <span>Master Entry Form</span>
+                    </h2>
+                    <button onclick="toggleForm()" class="btn btn-secondary btn-small">
+                        ✕
+                    </button>
+                </div>
+                
+                <form id="subscriptionForm">
+                    <div class="form-grid">
+                        <!-- Company Name -->
+                        <div class="form-group">
+                            <label for="companyName" class="form-label">🏢 Company Name *</label>
+                            <input type="text" id="companyName" required class="form-input" placeholder="Enter company name">
+                        </div>
+
+                        <!-- Mobile Number -->
+                        <div class="form-group">
+                            <label for="mobileNo" class="form-label">📞 Mobile Number *</label>
+                            <input type="tel" id="mobileNo" required class="form-input" placeholder="Enter 10-digit mobile number">
+                        </div>
+
+                        <!-- Email ID -->
+                        <div class="form-group">
+                            <label for="emailId" class="form-label">✉️ Email Address *</label>
+                            <input type="email" id="emailId" required class="form-input" placeholder="Enter email address">
+                        </div>
+
+                        <!-- Subscription ID -->
+                        <div class="form-group">
+                            <label for="subscriptionId" class="form-label">🔖 Subscription ID *</label>
+                            <input type="text" id="subscriptionId" required class="form-input" placeholder="Enter unique subscription ID">
+                        </div>
+
+                        <!-- Model/Plan -->
+                        <div class="form-group">
+                            <label for="model" class="form-label">📋 Subscription Model *</label>
+                            <input type="text" id="model" required class="form-input" placeholder="Enter subscription model/plan">
+                        </div>
+
+                        <!-- Starting Date -->
+                        <div class="form-group">
+                            <label for="startingDate" class="form-label">📅 Starting Date *</label>
+                            <input type="date" id="startingDate" required class="form-input">
+                        </div>
+
+                        <!-- Expiry Date -->
+                        <div class="form-group">
+                            <label for="expiryDate" class="form-label">📆 Expiry Date *</label>
+                            <input type="date" id="expiryDate" required class="form-input">
+                        </div>
+
+                        <!-- Remarks -->
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label for="remarks" class="form-label">📝 Remarks (Optional)</label>
+                            <textarea id="remarks" class="form-input" placeholder="Enter any additional notes..." rows="3"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div style="display: flex; gap: 1rem; justify-content: center; margin-top: 2rem;">
+                        <button type="submit" class="btn btn-success">
+                            💾 Save Subscription
+                        </button>
+                        <button type="button" onclick="clearForm()" class="btn btn-secondary">
+                            🗑️ Clear Form
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Search -->
+            <div class="search-container">
+                <div class="search-icon">🔍</div>
+                <input type="text" id="masterSearch" placeholder="Search by company name, email, subscription ID, or mobile..." 
+                       class="search-input">
+            </div>
+
+            <!-- Master Table -->
+            <div class="table-container">
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>🏢 Company</th>
+                                <th>📞 Mobile</th>
+                                <th>✉️ Email</th>
+                                <th>🔖 Sub ID</th>
+                                <th>⚙️ Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="masterTable">
+                            <tr>
+                                <td colspan="5" class="text-center" style="padding: 3rem;">
+                                    <div style="color: #64748b; font-size: 1.1rem;">
+                                        <div style="font-size: 3rem; margin-bottom: 1rem;">📝</div>
+                                        <p>No subscriptions added yet</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Mobile Cards -->
+                <div class="mobile-cards" id="masterCards">
+                    <div class="mobile-empty-state">
+                        <div class="empty-icon">📝</div>
+                        <p>No subscriptions added yet</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Renewal Tab -->
+        <div id="renewal" class="tab-content">
+            <!-- Renewal Form -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">
+                        <span>🔄</span>
+                        <span>Renewal Entry</span>
+                    </h2>
+                    <p class="card-subtitle">Extend subscription periods with ease</p>
+                </div>
+                
+                <form id="renewalForm">
+                    <div class="form-grid">
+                        <!-- Subscription Search -->
+                        <div class="form-group">
+                            <label for="renewalSubId" class="form-label">🔍 Search Subscription *</label>
+                            <input type="text" id="renewalSubId" required class="form-input" 
+                                   placeholder="Type subscription ID or company name to search..." 
+                                   autocomplete="off">
+                            <div id="searchSuggestions" style="display: none; position: absolute; z-index: 1000; background: white; border: 1px solid #e5e7eb; border-radius: 8px; max-height: 200px; overflow-y: auto; width: 100%; margin-top: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);"></div>
+                        </div>
+
+                        <!-- New Expiry Date -->
+                        <div class="form-group">
+                            <label for="newExpiryDate" class="form-label">📆 New Expiry Date *</label>
+                            <input type="date" id="newExpiryDate" required class="form-input">
+                        </div>
+                    </div>
+                    
+                    <!-- Selected Details -->
+                    <div id="selectedDetails" class="hidden" style="background: #f8f9fa; padding: 1.5rem; border-radius: 12px; margin: 2rem 0;">
+                        <h3 style="font-weight: 700; color: #374151; margin-bottom: 1rem;">📋 Selected Subscription Details</h3>
+                        <div id="detailsContent"></div>
+                    </div>
+                    
+                    <!-- Action Button -->
+                    <div style="text-center; margin-top: 2rem;">
+                        <button type="submit" class="btn btn-success">
+                            🔄 Renew Subscription
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Warning List -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">
+                        <span>⚠️</span>
+                        <span>Expiry Warning List</span>
+                    </h2>
+                    <p class="card-subtitle">Subscriptions expiring soon and already expired</p>
+                </div>
+
+                <!-- Warning Table -->
+                <div class="table-container">
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>🏢 Company</th>
+                                    <th>🔖 Sub ID</th>
+                                    <th>📋 Model</th>
+                                    <th>📆 Expiry</th>
+                                    <th>📊 Status</th>
+                                    <th>📞 Contact</th>
+                                    <th>⚡ Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="warningTable">
+                                <tr>
+                                    <td colspan="7" class="text-center" style="padding: 3rem;">
+                                        <div style="color: #64748b; font-size: 1.1rem;">
+                                            <div style="font-size: 3rem; margin-bottom: 1rem;">✅</div>
+                                            <p>No subscriptions expiring soon</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <!-- Mobile Cards -->
+                    <div class="mobile-cards" id="warningCards">
+                        <div class="mobile-empty-state">
+                            <div class="empty-icon">✅</div>
+                            <p>No subscriptions expiring soon</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings Tab -->
+        <div id="settings" class="tab-content">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">
+                        <span>⚙️</span>
+                        <span>Settings & Configuration</span>
+                    </h2>
+                    <p class="card-subtitle">Manage your app preferences and data</p>
+                </div>
+                
+                <!-- Warning Days Setting -->
+                <div class="card">
+                    <h3 class="card-title" style="font-size: 1.5rem;">
+                        <span>⚠️</span>
+                        <span>Expiry Warning Settings</span>
+                    </h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="warningDays" class="form-label">📅 Warning Days Before Expiry</label>
+                            <input type="number" id="warningDays" min="1" max="365" value="30" class="form-input" placeholder="Enter number of days">
+                            <p style="font-size: 0.875rem; color: #6b7280; margin-top: 0.5rem;">Subscriptions expiring within this many days will be shown in the warning list</p>
+                        </div>
+                        <div class="form-group">
+                            <button onclick="updateWarningDays()" class="btn btn-primary" style="width: 100%;">
+                                💾 Save Settings
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- WhatsApp Message Templates -->
+                <div class="card">
+                    <h3 class="card-title" style="font-size: 1.5rem;">
+                        <span>💬</span>
+                        <span>WhatsApp Message Templates</span>
+                    </h3>
+                    <div class="form-grid">
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label for="expiredTemplate" class="form-label">🚨 Expired Subscription Template</label>
+                            <textarea id="expiredTemplate" class="form-input" rows="4" placeholder="Enter template for expired subscriptions...">🚨 *URGENT: Subscription Expired*
+
+Dear {companyName},
+
+Your subscription has expired:
+📋 Subscription ID: {subscriptionId}
+📦 Plan: {model}
+📅 Expired on: {expiryDate}
+
+Please renew immediately to continue services.
+
+Contact us for renewal assistance.
+Thank you!</textarea>
+                        </div>
+                        
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label for="expiringSoonTemplate" class="form-label">⚠️ Expiring Soon Template</label>
+                            <textarea id="expiringSoonTemplate" class="form-input" rows="4" placeholder="Enter template for expiring soon subscriptions...">⚠️ *Subscription Expiring Soon*
+
+Dear {companyName},
+
+Your subscription is expiring soon:
+📋 Subscription ID: {subscriptionId}
+📦 Plan: {model}
+📅 Expiry Date: {expiryDate}
+
+Please renew before expiry to avoid service interruption.
+
+Contact us for easy renewal process.
+Thank you!</textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <button onclick="saveMessageTemplates()" class="btn btn-success" style="width: 100%;">
+                                💾 Save Templates
+                            </button>
+                        </div>
+                        <div class="form-group">
+                            <button onclick="resetTemplates()" class="btn btn-secondary" style="width: 100%;">
+                                🔄 Reset to Default
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <!-- Data Management -->
+                <div class="card">
+                    <h3 class="card-title" style="font-size: 1.5rem;">
+                        <span>📁</span>
+                        <span>Local Data Management</span>
+                    </h3>
+                    <div class="form-grid">
+                        <button onclick="exportData()" class="btn btn-primary">
+                            📤 Export Data
+                        </button>
+                        <label class="btn btn-success" style="cursor: pointer;">
+                            📥 Import Data
+                            <input type="file" id="importFile" accept=".json" class="hidden" onchange="importData(event)">
+                        </label>
+                        <button onclick="showResetConfirm()" class="btn btn-danger">
+                            🗑️ Reset All Data
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Bulk Operations Modal -->
+    <div id="bulkModal" class="modal">
+        <div class="modal-content" style="max-width: 500px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                <h3 style="font-size: 1.5rem; font-weight: 700; color: #374151; margin: 0;">📊 Bulk Operations</h3>
+                <button onclick="hideBulkModal()" class="btn btn-secondary btn-small">✕</button>
+            </div>
+            
+            <div style="display: grid; gap: 1rem;">
+                <button onclick="exportToExcel(); hideBulkModal();" class="btn btn-success" style="width: 100%;">
+                    📤 Export All Data to Excel
+                </button>
+                
+                <label class="btn" style="cursor: pointer; background: linear-gradient(135deg, #f59e0b, #d97706); color: white; width: 100%;">
+                    📥 Import Data from Excel
+                    <input type="file" id="bulkImportFile" accept=".xlsx,.xls,.csv" class="hidden" onchange="importFromExcel(event); hideBulkModal();">
+                </label>
+                
+                <div style="background: #f8f9fa; padding: 1rem; border-radius: 8px; font-size: 0.875rem; color: #6b7280;">
+                    <strong>📋 Instructions:</strong><br>
+                    • Export creates an Excel file with all subscription data<br>
+                    • Import accepts Excel (.xlsx, .xls) or CSV files<br>
+                    • Make sure columns match: Company, Mobile, Email, Sub ID, Model, Start Date, Expiry Date, Remarks
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div id="confirmModal" class="modal">
+        <div class="modal-content">
+            <div style="font-size: 3rem; margin-bottom: 1rem;">⚠️</div>
+            <h3 style="font-size: 1.25rem; font-weight: 700; color: #374151; margin-bottom: 1rem;">Confirm Action</h3>
+            <p id="confirmMessage" style="color: #6b7280; margin-bottom: 2rem;"></p>
+            <div class="flex justify-center gap-4">
+                <button onclick="hideConfirmModal()" class="btn btn-secondary">
+                    Cancel
+                </button>
+                <button id="confirmButton" class="btn btn-danger">
+                    Confirm
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification -->
+    <div id="notification" class="notification"></div>
+
+    <script>
+        // Global variables
+        let subscriptions = [];
+        let editingIndex = -1;
+        let settings = { warningDays: 30 };
+        let messageTemplates = {
+            expired: `🚨 *URGENT: Subscription Expired*
+
+Dear {companyName},
+
+Your subscription has expired:
+📋 Subscription ID: {subscriptionId}
+📦 Plan: {model}
+📅 Expired on: {expiryDate}
+
+Please renew immediately to continue services.
+
+Contact us for renewal assistance.
+Thank you!`,
+            expiringSoon: `⚠️ *Subscription Expiring Soon*
+
+Dear {companyName},
+
+Your subscription is expiring soon:
+📋 Subscription ID: {subscriptionId}
+📦 Plan: {model}
+📅 Expiry Date: {expiryDate}
+
+Please renew before expiry to avoid service interruption.
+
+Contact us for easy renewal process.
+Thank you!`
+        };
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', function() {
+            updateCurrentDate();
+            loadData();
+            loadSettings();
+            loadMessageTemplates();
+            
+            // Set up event listeners
+            document.getElementById('searchInput').addEventListener('input', filterDashboard);
+            document.getElementById('masterSearch').addEventListener('input', filterMasterTable);
+            document.getElementById('subscriptionForm').addEventListener('submit', handleSubmit);
+            document.getElementById('renewalForm').addEventListener('submit', handleRenewal);
+            document.getElementById('renewalSubId').addEventListener('input', handleRenewalSearch);
+            
+            // Close suggestions when clicking outside
+            document.addEventListener('click', function(e) {
+                const suggestionsDiv = document.getElementById('searchSuggestions');
+                const renewalInput = document.getElementById('renewalSubId');
+                if (!renewalInput.contains(e.target) && !suggestionsDiv.contains(e.target)) {
+                    suggestionsDiv.style.display = 'none';
+                }
+            });
+            
+            // Debug info
+            console.log('🚀 App loaded successfully:', {
+                subscriptionCount: subscriptions.length,
+                syncMethod: 'Local Storage Only'
+            });
+        });
+
+        // Update current date
+        function updateCurrentDate() {
+            const now = new Date();
+            const options = { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            };
+            document.getElementById('currentDate').textContent = now.toLocaleDateString('en-US', options);
+        }
+
+        // Tab switching
+        function showTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Remove active class from all nav tabs
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected tab
+            document.getElementById(tabName).classList.add('active');
+            document.getElementById(tabName + '-tab').classList.add('active');
+            
+            // Update data when switching tabs
+            if (tabName === 'dashboard') {
+                updateDashboard();
+            } else if (tabName === 'master') {
+                updateMasterTable();
+            } else if (tabName === 'renewal') {
+                updateWarningTable();
+            }
+        }
+
+        // Quick Actions Functions
+        function openMasterEntry() {
+            showTab('master');
+            // Ensure form is visible
+            const form = document.getElementById('masterForm');
+            const btn = document.getElementById('addBtn');
+            
+            if (form.classList.contains('hidden')) {
+                form.classList.remove('hidden');
+                btn.textContent = '❌ Cancel';
+                editingIndex = -1;
+                clearForm();
+            }
+            
+            // No auto scroll - let user stay where they are
+        }
+
+        function openBulkOperations() {
+            document.getElementById('bulkModal').classList.add('show');
+        }
+
+        function openWarningList() {
+            showTab('renewal');
+            // Scroll to warning table
+            setTimeout(() => {
+                const warningSection = document.querySelector('#renewal .card:last-child');
+                if (warningSection) {
+                    warningSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            }, 100);
+        }
+
+        // Toggle form visibility
+        function toggleForm() {
+            const form = document.getElementById('masterForm');
+            const btn = document.getElementById('addBtn');
+            
+            if (form.classList.contains('hidden')) {
+                form.classList.remove('hidden');
+                btn.textContent = '❌ Cancel';
+                editingIndex = -1;
+                clearForm();
+            } else {
+                form.classList.add('hidden');
+                btn.textContent = '➕ Add New Subscription';
+                editingIndex = -1;
+            }
+        }
+
+        // Clear form
+        function clearForm() {
+            document.getElementById('subscriptionForm').reset();
+            editingIndex = -1;
+        }
+
+        // Handle form submission
+        function handleSubmit(e) {
+            e.preventDefault();
+            
+            const formData = {
+                companyName: document.getElementById('companyName').value.trim(),
+                mobileNo: document.getElementById('mobileNo').value.trim(),
+                emailId: document.getElementById('emailId').value.trim(),
+                subscriptionId: document.getElementById('subscriptionId').value.trim(),
+                model: document.getElementById('model').value.trim(),
+                startingDate: document.getElementById('startingDate').value,
+                expiryDate: document.getElementById('expiryDate').value,
+                remarks: document.getElementById('remarks').value.trim()
+            };
+
+            // Validation
+            if (!formData.companyName || !formData.mobileNo || !formData.emailId || 
+                !formData.subscriptionId || !formData.model || !formData.startingDate || 
+                !formData.expiryDate) {
+                showNotification('❌ Please fill all required fields!', 'error');
+                return;
+            }
+
+            // Check for duplicate subscription ID (only if not editing)
+            if (editingIndex === -1) {
+                const duplicate = subscriptions.find(sub => sub.subscriptionId === formData.subscriptionId);
+                if (duplicate) {
+                    showNotification('❌ Subscription ID already exists!', 'error');
+                    return;
+                }
+            }
+
+            // Add or update subscription
+            if (editingIndex === -1) {
+                subscriptions.push(formData);
+                saveData();
+                updateAllTables();
+                showNotification('✅ Subscription added successfully!', 'success');
+            } else {
+                subscriptions[editingIndex] = formData;
+                saveData();
+                updateAllTables();
+                showNotification('✅ Subscription updated successfully!', 'success');
+                editingIndex = -1;
+            }
+
+            clearForm();
+            toggleForm();
+        }
+
+        // Handle renewal
+        function handleRenewal(e) {
+            e.preventDefault();
+            
+            const subId = document.getElementById('renewalSubId').value.trim();
+            const newExpiryDate = document.getElementById('newExpiryDate').value;
+            
+            if (!subId || subId.length < 2) {
+                showNotification('❌ Please enter at least 2 characters to search for subscription!', 'error');
+                return;
+            }
+            
+            if (!newExpiryDate) {
+                showNotification('❌ Please select new expiry date!', 'error');
+                return;
+            }
+
+            // Find exact subscription
+            const subscription = subscriptions.find(sub => 
+                (sub.subscriptionId && sub.subscriptionId.toLowerCase().includes(subId.toLowerCase())) ||
+                (sub.companyName && sub.companyName.toLowerCase().includes(subId.toLowerCase()))
+            );
+
+            if (!subscription) {
+                showNotification('❌ Subscription not found! Please check the subscription ID or company name.', 'error');
+                return;
+            }
+
+            // Validate new expiry date
+            const currentExpiry = new Date(subscription.expiryDate);
+            const newExpiry = new Date(newExpiryDate);
+            
+            if (newExpiry <= currentExpiry) {
+                showNotification('❌ New expiry date must be after current expiry date!', 'error');
+                return;
+            }
+
+            // Update subscription
+            const oldExpiry = subscription.expiryDate;
+            subscription.expiryDate = newExpiryDate;
+            
+            // Add renewal record to remarks
+            const renewalNote = `Renewed on ${formatDate(new Date().toISOString().split('T')[0])} from ${formatDate(oldExpiry)} to ${formatDate(newExpiryDate)}`;
+            if (subscription.remarks) {
+                subscription.remarks += ` | ${renewalNote}`;
+            } else {
+                subscription.remarks = renewalNote;
+            }
+            
+            saveData();
+            updateAllTables();
+            
+            // Reset form
+            document.getElementById('renewalForm').reset();
+            document.getElementById('selectedDetails').classList.add('hidden');
+            document.getElementById('newExpiryDate').min = '';
+            
+            showNotification(`✅ Subscription renewed successfully! ${subscription.companyName} expiry updated from ${formatDate(oldExpiry)} to ${formatDate(newExpiryDate)}`, 'success');
+            updateAllTables();
+        }
+
+        // Handle renewal search with auto-suggestions
+        function handleRenewalSearch() {
+            const searchTerm = document.getElementById('renewalSubId').value.trim();
+            const detailsDiv = document.getElementById('selectedDetails');
+            const contentDiv = document.getElementById('detailsContent');
+            const suggestionsDiv = document.getElementById('searchSuggestions');
+            
+            if (searchTerm.length < 1) {
+                detailsDiv.classList.add('hidden');
+                suggestionsDiv.style.display = 'none';
+                return;
+            }
+
+            // Auto-show suggestions for any input (even 1 character)
+            const matches = subscriptions.filter(sub => {
+                const searchLower = searchTerm.toLowerCase();
+                return (sub.subscriptionId && sub.subscriptionId.toLowerCase().includes(searchLower)) ||
+                       (sub.companyName && sub.companyName.toLowerCase().includes(searchLower));
+            }).slice(0, 10); // Show max 10 suggestions
+
+            if (matches.length > 0) {
+                suggestionsDiv.innerHTML = matches.map(sub => `
+                    <div onclick="selectSubscription('${sub.subscriptionId.replace(/'/g, "\\'")}', '${sub.companyName.replace(/'/g, "\\'")}', '${sub.expiryDate}')" 
+                         style="padding: 0.75rem; cursor: pointer; border-bottom: 1px solid #f3f4f6; transition: all 0.2s ease;"
+                         onmouseover="this.style.background='#f0f9ff'; this.style.borderLeft='4px solid #3b82f6'" 
+                         onmouseout="this.style.background='white'; this.style.borderLeft='none'">
+                        <div style="font-weight: 600; color: #374151; margin-bottom: 0.25rem;">${sub.companyName}</div>
+                        <div style="font-size: 0.875rem; color: #6b7280;">
+                            <span style="background: #e0f2fe; padding: 0.125rem 0.5rem; border-radius: 4px; margin-right: 0.5rem;">ID: ${sub.subscriptionId}</span>
+                            <span style="background: #fef3c7; padding: 0.125rem 0.5rem; border-radius: 4px;">Expires: ${formatDate(sub.expiryDate)}</span>
+                        </div>
+                    </div>
+                `).join('');
+                suggestionsDiv.style.display = 'block';
+                
+                // Auto-select first match if exact match found
+                const exactMatch = matches.find(sub => 
+                    sub.subscriptionId.toLowerCase() === searchTerm.toLowerCase() ||
+                    sub.companyName.toLowerCase() === searchTerm.toLowerCase()
+                );
+                
+                if (exactMatch) {
+                    showSubscriptionDetails(exactMatch);
+                } else if (matches.length === 1) {
+                    // Auto-select if only one match
+                    showSubscriptionDetails(matches[0]);
+                }
+            } else {
+                suggestionsDiv.innerHTML = `
+                    <div style="padding: 1rem; text-align: center; color: #6b7280;">
+                        <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">🔍</div>
+                        <div>No subscriptions found matching "${searchTerm}"</div>
+                        <div style="font-size: 0.8rem; margin-top: 0.5rem;">Try typing company name or subscription ID</div>
+                    </div>
+                `;
+                suggestionsDiv.style.display = 'block';
+                detailsDiv.classList.add('hidden');
+            }
+        }
+
+        // Show subscription details
+        function showSubscriptionDetails(subscription) {
+            const detailsDiv = document.getElementById('selectedDetails');
+            const contentDiv = document.getElementById('detailsContent');
+            
+            contentDiv.innerHTML = `
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                    <div><strong>🏢 Company:</strong> ${subscription.companyName || 'N/A'}</div>
+                    <div><strong>🔖 Sub ID:</strong> ${subscription.subscriptionId || 'N/A'}</div>
+                    <div><strong>📋 Model:</strong> ${subscription.model || 'N/A'}</div>
+                    <div><strong>📆 Current Expiry:</strong> ${formatDate(subscription.expiryDate) || 'N/A'}</div>
+                    <div><strong>✉️ Email:</strong> ${subscription.emailId || 'N/A'}</div>
+                    <div><strong>📞 Mobile:</strong> ${subscription.mobileNo || 'N/A'}</div>
+                </div>
+            `;
+            detailsDiv.classList.remove('hidden');
+            
+            // Auto-set minimum date for new expiry
+            const currentExpiry = new Date(subscription.expiryDate);
+            const tomorrow = new Date(currentExpiry);
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            document.getElementById('newExpiryDate').min = tomorrow.toISOString().split('T')[0];
+        }
+
+        // Select subscription from suggestions
+        function selectSubscription(subscriptionId, companyName, expiryDate) {
+            document.getElementById('renewalSubId').value = subscriptionId;
+            document.getElementById('searchSuggestions').style.display = 'none';
+            
+            // Find and display the selected subscription details
+            const found = subscriptions.find(sub => sub.subscriptionId === subscriptionId);
+            if (found) {
+                const detailsDiv = document.getElementById('selectedDetails');
+                const contentDiv = document.getElementById('detailsContent');
+                
+                contentDiv.innerHTML = `
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                        <div><strong>🏢 Company:</strong> ${found.companyName || 'N/A'}</div>
+                        <div><strong>🔖 Sub ID:</strong> ${found.subscriptionId || 'N/A'}</div>
+                        <div><strong>📋 Model:</strong> ${found.model || 'N/A'}</div>
+                        <div><strong>📆 Current Expiry:</strong> ${formatDate(found.expiryDate) || 'N/A'}</div>
+                        <div><strong>✉️ Email:</strong> ${found.emailId || 'N/A'}</div>
+                        <div><strong>📞 Mobile:</strong> ${found.mobileNo || 'N/A'}</div>
+                    </div>
+                `;
+                detailsDiv.classList.remove('hidden');
+                
+                // Auto-set minimum date for new expiry
+                const currentExpiry = new Date(found.expiryDate);
+                const tomorrow = new Date(currentExpiry);
+                tomorrow.setDate(tomorrow.getDate() + 1);
+                document.getElementById('newExpiryDate').min = tomorrow.toISOString().split('T')[0];
+            }
+        }
+
+        // Edit subscription
+        function editSubscription(index) {
+            const sub = subscriptions[index];
+            
+            document.getElementById('companyName').value = sub.companyName;
+            document.getElementById('mobileNo').value = sub.mobileNo;
+            document.getElementById('emailId').value = sub.emailId;
+            document.getElementById('subscriptionId').value = sub.subscriptionId;
+            document.getElementById('model').value = sub.model;
+            document.getElementById('startingDate').value = convertDateForInput(sub.startingDate);
+            document.getElementById('expiryDate').value = convertDateForInput(sub.expiryDate);
+            document.getElementById('remarks').value = sub.remarks || '';
+            
+            editingIndex = index;
+            
+            const form = document.getElementById('masterForm');
+            const btn = document.getElementById('addBtn');
+            
+            form.classList.remove('hidden');
+            btn.textContent = '❌ Cancel';
+            
+            showTab('master');
+        }
+
+        // Delete subscription
+        function deleteSubscription(index) {
+            const subscriptionToDelete = subscriptions[index];
+            showConfirmModal(
+                'Are you sure you want to delete this subscription?',
+                () => {
+                    subscriptions.splice(index, 1);
+                    saveData();
+                    updateAllTables();
+                    showNotification('✅ Subscription deleted successfully!', 'success');
+                }
+            );
+        }
+
+        // WhatsApp integration
+        function sendWhatsApp(mobile, message) {
+            const cleanMobile = mobile.replace(/\D/g, '');
+            const encodedMessage = encodeURIComponent(message);
+            const whatsappUrl = `https://wa.me/91${cleanMobile}?text=${encodedMessage}`;
+            window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
+        }
+
+        // Quick renew function
+        function quickRenew(subscriptionId) {
+            // Switch to renewal tab
+            showTab('renewal');
+            
+            // Auto-fill the subscription ID in renewal form
+            document.getElementById('renewalSubId').value = subscriptionId;
+            
+            // Trigger search to show details
+            handleRenewalSearch();
+            
+            // Scroll to renewal form
+            setTimeout(() => {
+                const renewalForm = document.querySelector('#renewal .card:first-child');
+                if (renewalForm) {
+                    renewalForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            }, 100);
+            
+            showNotification('🔄 Renewal form opened! Please set the new expiry date.', 'success');
+        }
+
+        function sendExpiryReminder(index) {
+            const sub = subscriptions[index];
+            const message = `🚨 *Subscription Expiry Reminder*
+
+Dear ${sub.companyName},
+
+Your subscription is expiring soon:
+📋 Subscription ID: ${sub.subscriptionId}
+📦 Plan: ${sub.model}
+📅 Expiry Date: ${formatDate(sub.expiryDate)}
+
+Please renew your subscription to continue enjoying our services.
+
+Thank you!`;
+
+            sendWhatsApp(sub.mobileNo, message);
+        }
+
+        // Update dashboard
+        function updateDashboard() {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0); // Set to start of day for accurate comparison
+            const warningDays = settings.warningDays || 30;
+            const warningDate = new Date(today.getTime() + (warningDays * 24 * 60 * 60 * 1000));
+            
+            let active = 0, expiring = 0, expired = 0;
+            
+            subscriptions.forEach(sub => {
+                if (!sub.expiryDate) {
+                    active++; // Count subscriptions without expiry date as active
+                    return;
+                }
+                
+                const expiryDate = new Date(sub.expiryDate);
+                expiryDate.setHours(0, 0, 0, 0); // Set to start of day for accurate comparison
+                
+                if (expiryDate < today) {
+                    expired++;
+                } else if (expiryDate <= warningDate) {
+                    expiring++;
+                } else {
+                    active++;
+                }
+            });
+            
+            // Update mini stats
+            document.getElementById('miniTotal').textContent = subscriptions.length;
+            document.getElementById('miniActive').textContent = active;
+            document.getElementById('miniExpiring').textContent = expiring;
+            document.getElementById('miniExpired').textContent = expired;
+            
+            // Update dashboard table
+            updateDashboardTable();
+        }
+
+        // Update dashboard table
+        function updateDashboardTable() {
+            const tbody = document.getElementById('dashboardTable');
+            const cardsContainer = document.getElementById('dashboardCards');
+            
+            if (subscriptions.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="text-center" style="padding: 3rem;">
+                            <div style="color: #64748b; font-size: 1.1rem;">
+                                <div style="font-size: 3rem; margin-bottom: 1rem;">📋</div>
+                                <p>No subscriptions found</p>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                
+                cardsContainer.innerHTML = `
+                    <div class="mobile-empty-state">
+                        <div class="empty-icon">📋</div>
+                        <p>No subscriptions found</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Update table
+            tbody.innerHTML = subscriptions.map(sub => {
+                const status = getSubscriptionStatus(sub.expiryDate);
+                return `
+                    <tr>
+                        <td>${sub.companyName}</td>
+                        <td>${sub.emailId}</td>
+                        <td>${sub.subscriptionId}</td>
+                        <td>${sub.model}</td>
+                        <td>${formatDate(sub.expiryDate)}</td>
+                        <td><span class="status-badge ${status.class}">${status.text}</span></td>
+                    </tr>
+                `;
+            }).join('');
+            
+            // Update mobile cards
+            cardsContainer.innerHTML = subscriptions.map(sub => {
+                const status = getSubscriptionStatus(sub.expiryDate);
+                return `
+                    <div class="mobile-card">
+                        <div class="mobile-card-header">
+                            <h3 class="mobile-card-title">🏢 ${sub.companyName}</h3>
+                            <div class="mobile-card-status">
+                                <span class="status-badge ${status.class}">${status.text}</span>
+                            </div>
+                        </div>
+                        <div class="mobile-card-body">
+                            <div class="mobile-card-row">
+                                <span class="mobile-card-label">✉️ Email</span>
+                                <span class="mobile-card-value">${sub.emailId}</span>
+                            </div>
+                            <div class="mobile-card-row">
+                                <span class="mobile-card-label">🔖 Sub ID</span>
+                                <span class="mobile-card-value">${sub.subscriptionId}</span>
+                            </div>
+                            <div class="mobile-card-row">
+                                <span class="mobile-card-label">📋 Model</span>
+                                <span class="mobile-card-value">${sub.model}</span>
+                            </div>
+                            <div class="mobile-card-row">
+                                <span class="mobile-card-label">📆 Expiry</span>
+                                <span class="mobile-card-value">${formatDate(sub.expiryDate)}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Update master table
+        function updateMasterTable() {
+            const tbody = document.getElementById('masterTable');
+            const cardsContainer = document.getElementById('masterCards');
+            
+            if (subscriptions.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="5" class="text-center" style="padding: 3rem;">
+                            <div style="color: #64748b; font-size: 1.1rem;">
+                                <div style="font-size: 3rem; margin-bottom: 1rem;">📝</div>
+                                <p>No subscriptions added yet</p>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                
+                cardsContainer.innerHTML = `
+                    <div class="mobile-empty-state">
+                        <div class="empty-icon">📝</div>
+                        <p>No subscriptions added yet</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Update table
+            tbody.innerHTML = subscriptions.map((sub, index) => `
+                <tr>
+                    <td>${sub.companyName}</td>
+                    <td>${sub.mobileNo}</td>
+                    <td>${sub.emailId}</td>
+                    <td>${sub.subscriptionId}</td>
+                    <td>
+                        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                            <button onclick="editSubscription(${index})" class="btn btn-primary btn-small">
+                                ✏️ Edit
+                            </button>
+                            <button onclick="deleteSubscription(${index})" class="btn btn-danger btn-small">
+                                🗑️ Delete
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+            
+            // Update mobile cards
+            cardsContainer.innerHTML = subscriptions.map((sub, index) => `
+                <div class="mobile-card">
+                    <div class="mobile-card-header">
+                        <h3 class="mobile-card-title">🏢 ${sub.companyName}</h3>
+                    </div>
+                    <div class="mobile-card-body">
+                        <div class="mobile-card-row">
+                            <span class="mobile-card-label">📞 Mobile</span>
+                            <span class="mobile-card-value">${sub.mobileNo}</span>
+                        </div>
+                        <div class="mobile-card-row">
+                            <span class="mobile-card-label">✉️ Email</span>
+                            <span class="mobile-card-value">${sub.emailId}</span>
+                        </div>
+                        <div class="mobile-card-row">
+                            <span class="mobile-card-label">🔖 Sub ID</span>
+                            <span class="mobile-card-value">${sub.subscriptionId}</span>
+                        </div>
+                    </div>
+                    <div class="mobile-card-actions">
+                        <button onclick="editSubscription(${index})" class="btn btn-primary btn-small">
+                            ✏️ Edit
+                        </button>
+                        <button onclick="deleteSubscription(${index})" class="btn btn-danger btn-small">
+                            🗑️ Delete
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Update warning table
+        function updateWarningTable() {
+            const tbody = document.getElementById('warningTable');
+            const cardsContainer = document.getElementById('warningCards');
+            const today = new Date();
+            today.setHours(0, 0, 0, 0); // Set to start of day for accurate comparison
+            const warningDays = settings.warningDays || 30;
+            const warningDate = new Date(today.getTime() + (warningDays * 24 * 60 * 60 * 1000));
+            
+            const warningSubscriptions = subscriptions.filter(sub => {
+                if (!sub.expiryDate) return false;
+                
+                const expiryDate = new Date(sub.expiryDate);
+                expiryDate.setHours(0, 0, 0, 0); // Set to start of day for accurate comparison
+                
+                // Include if expiry date is today or in the future but within warning period
+                return expiryDate <= warningDate;
+            }).sort((a, b) => {
+                const dateA = new Date(a.expiryDate);
+                const dateB = new Date(b.expiryDate);
+                return dateA - dateB;
+            });
+            
+            if (warningSubscriptions.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="7" class="text-center" style="padding: 3rem;">
+                            <div style="color: #64748b; font-size: 1.1rem;">
+                                <div style="font-size: 3rem; margin-bottom: 1rem;">✅</div>
+                                <p>No subscriptions expiring within ${warningDays} days</p>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                
+                cardsContainer.innerHTML = `
+                    <div class="mobile-empty-state">
+                        <div class="empty-icon">✅</div>
+                        <p>No subscriptions expiring within ${warningDays} days</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Update table
+            tbody.innerHTML = warningSubscriptions.map((sub) => {
+                const status = getSubscriptionStatus(sub.expiryDate);
+                const expiryDate = new Date(sub.expiryDate);
+                const daysLeft = Math.ceil((expiryDate - today) / (1000 * 60 * 60 * 24));
+                const daysText = daysLeft < 0 ? `${Math.abs(daysLeft)} days ago` : 
+                                daysLeft === 0 ? 'Today' : 
+                                `${daysLeft} days left`;
+                
+                return `
+                    <tr>
+                        <td>${sub.companyName || 'N/A'}</td>
+                        <td>${sub.subscriptionId || 'N/A'}</td>
+                        <td>${sub.model || 'N/A'}</td>
+                        <td>
+                            ${formatDate(sub.expiryDate)}<br>
+                            <small style="color: #6b7280;">(${daysText})</small>
+                        </td>
+                        <td><span class="status-badge ${status.class}">${status.text}</span></td>
+                        <td>
+                            <div style="font-size: 0.875rem; line-height: 1.4;">
+                                <div style="margin-bottom: 0.25rem;"><strong>📞:</strong> ${sub.mobileNo || 'N/A'}</div>
+                                <div><strong>✉️:</strong> ${sub.emailId || 'N/A'}</div>
+                            </div>
+                        </td>
+                        <td>
+                            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                                <button onclick="sendTemplateMessage('${sub.subscriptionId}')" 
+                                        class="btn btn-success btn-small" 
+                                        title="Send WhatsApp message using template">
+                                    💬 WhatsApp
+                                </button>
+                                <button onclick="quickRenew('${sub.subscriptionId}')" 
+                                        class="btn btn-primary btn-small">
+                                    🔄 Renew
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+            
+            // Update mobile cards
+            cardsContainer.innerHTML = warningSubscriptions.map((sub) => {
+                const status = getSubscriptionStatus(sub.expiryDate);
+                const expiryDate = new Date(sub.expiryDate);
+                const daysLeft = Math.ceil((expiryDate - today) / (1000 * 60 * 60 * 24));
+                const daysText = daysLeft < 0 ? `${Math.abs(daysLeft)} days ago` : 
+                                daysLeft === 0 ? 'Today' : 
+                                `${daysLeft} days left`;
+                
+                return `
+                    <div class="mobile-card">
+                        <div class="mobile-card-header">
+                            <h3 class="mobile-card-title">🏢 ${sub.companyName || 'N/A'}</h3>
+                            <div class="mobile-card-status">
+                                <span class="status-badge ${status.class}">${status.text}</span>
+                            </div>
+                        </div>
+                        <div class="mobile-card-body">
+                            <div class="mobile-card-row">
+                                <span class="mobile-card-label">🔖 Sub ID</span>
+                                <span class="mobile-card-value">${sub.subscriptionId || 'N/A'}</span>
+                            </div>
+                            <div class="mobile-card-row">
+                                <span class="mobile-card-label">📋 Model</span>
+                                <span class="mobile-card-value">${sub.model || 'N/A'}</span>
+                            </div>
+                            <div class="mobile-card-row">
+                                <span class="mobile-card-label">📆 Expiry</span>
+                                <span class="mobile-card-value">
+                                    ${formatDate(sub.expiryDate)}<br>
+                                    <small style="color: #6b7280;">(${daysText})</small>
+                                </span>
+                            </div>
+                            <div class="mobile-card-row">
+                                <span class="mobile-card-label">📞 Mobile</span>
+                                <span class="mobile-card-value">${sub.mobileNo || 'N/A'}</span>
+                            </div>
+                            <div class="mobile-card-row">
+                                <span class="mobile-card-label">✉️ Email</span>
+                                <span class="mobile-card-value">${sub.emailId || 'N/A'}</span>
+                            </div>
+                        </div>
+                        <div class="mobile-card-actions">
+                            <button onclick="sendTemplateMessage('${sub.subscriptionId}')" 
+                                    class="btn btn-success btn-small" 
+                                    title="Send WhatsApp message using template">
+                                💬 WhatsApp
+                            </button>
+                            <button onclick="quickRenew('${sub.subscriptionId}')" 
+                                    class="btn btn-primary btn-small">
+                                🔄 Renew
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Update all tables
+        function updateAllTables() {
+            updateDashboard();
+            updateMasterTable();
+            updateWarningTable();
+        }
+
+        // Get subscription status
+        function getSubscriptionStatus(expiryDate) {
+            if (!expiryDate) {
+                return { text: 'Active', class: 'status-active' };
+            }
+            
+            const today = new Date();
+            today.setHours(0, 0, 0, 0); // Set to start of day for accurate comparison
+            const expiry = new Date(expiryDate);
+            expiry.setHours(0, 0, 0, 0); // Set to start of day for accurate comparison
+            const warningDays = settings.warningDays || 30;
+            const warningDate = new Date(today.getTime() + (warningDays * 24 * 60 * 60 * 1000));
+            
+            if (expiry < today) {
+                return { text: 'Expired', class: 'status-expired' };
+            } else if (expiry <= warningDate) {
+                return { text: 'Expiring Soon', class: 'status-expiring' };
+            } else {
+                return { text: 'Active', class: 'status-active' };
+            }
+        }
+
+        // Format date
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-GB');
+        }
+
+        // Filter dashboard
+        function filterDashboard() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            
+            // Filter table rows
+            const rows = document.querySelectorAll('#dashboardTable tr');
+            rows.forEach(row => {
+                if (row.cells.length > 1) {
+                    const text = row.textContent.toLowerCase();
+                    row.style.display = text.includes(searchTerm) ? '' : 'none';
+                }
+            });
+            
+            // Filter mobile cards
+            const cards = document.querySelectorAll('#dashboardCards .mobile-card');
+            cards.forEach(card => {
+                const text = card.textContent.toLowerCase();
+                card.style.display = text.includes(searchTerm) ? '' : 'none';
+            });
+        }
+
+        // Filter master table
+        function filterMasterTable() {
+            const searchTerm = document.getElementById('masterSearch').value.toLowerCase();
+            
+            // Filter table rows
+            const rows = document.querySelectorAll('#masterTable tr');
+            rows.forEach(row => {
+                if (row.cells.length > 1) {
+                    const text = row.textContent.toLowerCase();
+                    row.style.display = text.includes(searchTerm) ? '' : 'none';
+                }
+            });
+            
+            // Filter mobile cards
+            const cards = document.querySelectorAll('#masterCards .mobile-card');
+            cards.forEach(card => {
+                const text = card.textContent.toLowerCase();
+                card.style.display = text.includes(searchTerm) ? '' : 'none';
+            });
+        }
+
+        // Update warning days
+        function updateWarningDays() {
+            const days = parseInt(document.getElementById('warningDays').value);
+            if (days && days > 0 && days <= 365) {
+                settings.warningDays = days;
+                saveSettings();
+                updateAllTables();
+                showNotification('✅ Warning days updated successfully!', 'success');
+            } else {
+                showNotification('❌ Please enter a valid number between 1 and 365!', 'error');
+            }
+        }
+
+        // Export data
+        function exportData() {
+            const data = {
+                subscriptions: subscriptions,
+                settings: settings,
+                exportDate: new Date().toISOString()
+            };
+            
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `subscription-data-${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            showNotification('✅ Data exported successfully!', 'success');
+        }
+
+        // Import data
+        function importData(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    
+                    if (data.subscriptions && Array.isArray(data.subscriptions)) {
+                        subscriptions = data.subscriptions;
+                        if (data.settings) {
+                            settings = { ...settings, ...data.settings };
+                            document.getElementById('warningDays').value = settings.warningDays;
+                        }
+                        
+                        saveData();
+                        saveSettings();
+                        updateAllTables();
+                        showNotification('✅ Data imported successfully!', 'success');
+                    } else {
+                        showNotification('❌ Invalid file format!', 'error');
+                    }
+                } catch (error) {
+                    showNotification('❌ Error reading file!', 'error');
+                }
+            };
+            reader.readAsText(file);
+            
+            // Reset file input
+            event.target.value = '';
+        }
+
+        // Excel Export Function
+        function exportToExcel() {
+            if (subscriptions.length === 0) {
+                showNotification('❌ No data to export!', 'error');
+                return;
+            }
+
+            // Create CSV content
+            const headers = ['Company Name', 'Mobile Number', 'Email Address', 'Subscription ID', 'Model/Plan', 'Starting Date', 'Expiry Date', 'Remarks'];
+            const csvContent = [
+                headers.join(','),
+                ...subscriptions.map(sub => [
+                    `"${sub.companyName}"`,
+                    `"${sub.mobileNo}"`,
+                    `"${sub.emailId}"`,
+                    `"${sub.subscriptionId}"`,
+                    `"${sub.model}"`,
+                    `"${sub.startingDate}"`,
+                    `"${sub.expiryDate}"`,
+                    `"${sub.remarks || ''}"`
+                ].join(','))
+            ].join('\n');
+
+            // Create and download file
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            link.setAttribute('download', `subscription-data-${new Date().toISOString().split('T')[0]}.csv`);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            showNotification('✅ Data exported to Excel successfully!', 'success');
+        }
+
+        // Excel Import Function
+        function importFromExcel(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const text = e.target.result;
+                    const lines = text.split('\n').filter(line => line.trim());
+                    
+                    if (lines.length < 2) {
+                        showNotification('❌ File appears to be empty or invalid!', 'error');
+                        return;
+                    }
+
+                    // Skip header row and process data
+                    const importedData = [];
+                    const errors = [];
+                    
+                    for (let i = 1; i < lines.length; i++) {
+                        const line = lines[i].trim();
+                        if (!line) continue;
+                        
+                        // Parse CSV line (handle quoted fields)
+                        const fields = parseCSVLine(line);
+                        
+                        if (fields.length < 7) {
+                            errors.push(`Row ${i + 1}: Insufficient data`);
+                            continue;
+                        }
+
+                        const subscription = {
+                            companyName: fields[0]?.trim() || '',
+                            mobileNo: fields[1]?.trim() || '',
+                            emailId: fields[2]?.trim() || '',
+                            subscriptionId: fields[3]?.trim() || '',
+                            model: fields[4]?.trim() || '',
+                            startingDate: convertDateForInput(fields[5]?.trim() || ''),
+                            expiryDate: convertDateForInput(fields[6]?.trim() || ''),
+                            remarks: fields[7]?.trim() || ''
+                        };
+
+                        // Basic validation
+                        if (!subscription.companyName || !subscription.subscriptionId || !subscription.expiryDate) {
+                            errors.push(`Row ${i + 1}: Missing required fields (Company, Sub ID, or Expiry Date)`);
+                            continue;
+                        }
+
+                        // Check for duplicate subscription ID
+                        const existingIndex = subscriptions.findIndex(sub => sub.subscriptionId === subscription.subscriptionId);
+                        if (existingIndex !== -1) {
+                            // Update existing subscription
+                            subscriptions[existingIndex] = subscription;
+                        } else {
+                            // Add new subscription
+                            importedData.push(subscription);
+                        }
+                    }
+
+                    // Add new subscriptions
+                    subscriptions.push(...importedData);
+                    
+                    saveData();
+                    updateAllTables();
+                    
+                    let message = `✅ Import completed! Added/Updated ${importedData.length + (lines.length - 1 - importedData.length - errors.length)} subscriptions.`;
+                    if (errors.length > 0) {
+                        message += ` ${errors.length} rows had errors.`;
+                    }
+                    
+                    showNotification(message, 'success');
+                    
+                } catch (error) {
+                    showNotification('❌ Error reading file! Please check the format.', 'error');
+                }
+            };
+            
+            reader.readAsText(file);
+            
+            // Reset file input
+            event.target.value = '';
+        }
+
+        // Parse CSV line with quoted field support
+        function parseCSVLine(line) {
+            const fields = [];
+            let current = '';
+            let inQuotes = false;
+            
+            for (let i = 0; i < line.length; i++) {
+                const char = line[i];
+                
+                if (char === '"') {
+                    inQuotes = !inQuotes;
+                } else if (char === ',' && !inQuotes) {
+                    fields.push(current);
+                    current = '';
+                } else {
+                    current += char;
+                }
+            }
+            
+            fields.push(current);
+            return fields;
+        }
+
+        // Convert date format for input fields (DD/MM/YYYY to YYYY-MM-DD)
+        function convertDateForInput(dateString) {
+            if (!dateString) return '';
+            
+            // If already in YYYY-MM-DD format, return as is
+            if (dateString.match(/^\d{4}-\d{2}-\d{2}$/)) {
+                return dateString;
+            }
+            
+            // Handle DD/MM/YYYY format
+            if (dateString.includes('/')) {
+                const parts = dateString.split('/');
+                if (parts.length === 3) {
+                    const day = parts[0].padStart(2, '0');
+                    const month = parts[1].padStart(2, '0');
+                    const year = parts[2];
+                    return `${year}-${month}-${day}`;
+                }
+            }
+            
+            // Handle DD-MM-YYYY format
+            if (dateString.includes('-') && dateString.split('-')[0].length <= 2) {
+                const parts = dateString.split('-');
+                if (parts.length === 3) {
+                    const day = parts[0].padStart(2, '0');
+                    const month = parts[1].padStart(2, '0');
+                    const year = parts[2];
+                    return `${year}-${month}-${day}`;
+                }
+            }
+            
+            return dateString;
+        }
+
+        // Show reset confirmation
+        function showResetConfirm() {
+            showConfirmModal(
+                'Are you sure you want to reset all data? This action cannot be undone!',
+                () => {
+                    subscriptions = [];
+                    settings = { warningDays: 30 };
+                    saveData();
+                    saveSettings();
+                    updateAllTables();
+                    document.getElementById('warningDays').value = 30;
+                    showNotification('✅ All data has been reset!', 'success');
+                }
+            );
+        }
+
+        // Show confirmation modal
+        function showConfirmModal(message, onConfirm) {
+            document.getElementById('confirmMessage').textContent = message;
+            document.getElementById('confirmButton').onclick = () => {
+                hideConfirmModal();
+                onConfirm();
+            };
+            document.getElementById('confirmModal').classList.add('show');
+        }
+
+        // Hide confirmation modal
+        function hideConfirmModal() {
+            document.getElementById('confirmModal').classList.remove('show');
+        }
+
+        // Hide bulk modal
+        function hideBulkModal() {
+            document.getElementById('bulkModal').classList.remove('show');
+        }
+
+        // Show notification
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = `notification ${type}`;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        // Data persistence
+        function saveData() {
+            localStorage.setItem('subscriptionData', JSON.stringify(subscriptions));
+        }
+
+        function loadData() {
+            const saved = localStorage.getItem('subscriptionData');
+            if (saved) {
+                subscriptions = JSON.parse(saved);
+                updateAllTables();
+            }
+        }
+
+        function saveSettings() {
+            localStorage.setItem('subscriptionSettings', JSON.stringify(settings));
+        }
+
+        function loadSettings() {
+            const saved = localStorage.getItem('subscriptionSettings');
+            if (saved) {
+                settings = JSON.parse(saved);
+                document.getElementById('warningDays').value = settings.warningDays;
+            }
+        }
+
+
+
+        // Message Template Functions
+        function loadMessageTemplates() {
+            const saved = localStorage.getItem('messageTemplates');
+            if (saved) {
+                messageTemplates = JSON.parse(saved);
+            }
+            
+            // Update template textareas
+            document.getElementById('expiredTemplate').value = messageTemplates.expired;
+            document.getElementById('expiringSoonTemplate').value = messageTemplates.expiringSoon;
+        }
+
+        function saveMessageTemplates() {
+            messageTemplates.expired = document.getElementById('expiredTemplate').value;
+            messageTemplates.expiringSoon = document.getElementById('expiringSoonTemplate').value;
+            
+            localStorage.setItem('messageTemplates', JSON.stringify(messageTemplates));
+            showNotification('✅ Message templates saved successfully!', 'success');
+        }
+
+        function resetTemplates() {
+            messageTemplates = {
+                expired: `🚨 *URGENT: Subscription Expired*
+
+Dear {companyName},
+
+Your subscription has expired:
+📋 Subscription ID: {subscriptionId}
+📦 Plan: {model}
+📅 Expired on: {expiryDate}
+
+Please renew immediately to continue services.
+
+Contact us for renewal assistance.
+Thank you!`,
+                expiringSoon: `⚠️ *Subscription Expiring Soon*
+
+Dear {companyName},
+
+Your subscription is expiring soon:
+📋 Subscription ID: {subscriptionId}
+📦 Plan: {model}
+📅 Expiry Date: {expiryDate}
+
+Please renew before expiry to avoid service interruption.
+
+Contact us for easy renewal process.
+Thank you!`
+            };
+            
+            document.getElementById('expiredTemplate').value = messageTemplates.expired;
+            document.getElementById('expiringSoonTemplate').value = messageTemplates.expiringSoon;
+            
+            localStorage.setItem('messageTemplates', JSON.stringify(messageTemplates));
+            showNotification('✅ Templates reset to default!', 'success');
+        }
+
+        function sendTemplateMessage(subscriptionId) {
+            const subscription = subscriptions.find(sub => sub.subscriptionId === subscriptionId);
+            if (!subscription) {
+                showNotification('❌ Subscription not found!', 'error');
+                return;
+            }
+
+            if (!subscription.mobileNo) {
+                showNotification('❌ Mobile number not found for this subscription!', 'error');
+                return;
+            }
+
+            // Determine which template to use based on expiry status
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const expiryDate = new Date(subscription.expiryDate);
+            expiryDate.setHours(0, 0, 0, 0);
+            
+            let template;
+            if (expiryDate < today) {
+                // Expired
+                template = messageTemplates.expired;
+            } else {
+                // Expiring soon
+                template = messageTemplates.expiringSoon;
+            }
+
+            // Replace placeholders with actual data
+            const message = template
+                .replace(/{companyName}/g, subscription.companyName || 'Valued Customer')
+                .replace(/{subscriptionId}/g, subscription.subscriptionId || 'N/A')
+                .replace(/{model}/g, subscription.model || 'N/A')
+                .replace(/{expiryDate}/g, formatDate(subscription.expiryDate) || 'N/A');
+
+            // Send WhatsApp message
+            sendWhatsApp(subscription.mobileNo, message);
+            
+            // Show success notification
+            const statusText = expiryDate < today ? 'expired' : 'expiring soon';
+            showNotification(`✅ ${statusText} template message sent to ${subscription.companyName}!`, 'success');
+        }
+
+
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98f739fbf34b1bc2',t:'MTc2MDYxNDI1MS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
